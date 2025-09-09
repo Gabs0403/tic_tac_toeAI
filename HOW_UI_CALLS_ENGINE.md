@@ -1,5 +1,6 @@
-
+======================================================
 Tic-Tac-Toe Engine Interface.
+======================================================
 
 
 Shared Data (applies to all methods)
@@ -10,10 +11,10 @@ Shared Data (applies to all methods)
 
 The idea is that UI will render everything that is in game state.
 
-========================================================================================================
+======================================================
 METHOD 1
 create_board(difficulty, first_player) -> (game_state)
-========================================================================================================
+======================================================
 
 Purpose: Start or reset a game with a fresh empty board, record difficulty, and set who moves first.
 
@@ -34,10 +35,10 @@ It will return the game_state with the following details:
 3. difficulty = difficulty.
 4. set game_status to "in-progress".
 
-========================================================================================================
+======================================================
 METHOD 2
 apply_move(game_state, row, col) -> (updated_game_state, status)
-========================================================================================================
+======================================================
 
 Purpose: place the current player's mark at the requested cell, if legal, update turn, and evaluate the game_status (win/lose/draw/in_progress). It enforces the rules.
 
@@ -58,10 +59,10 @@ Output (return value to front-end)
 1. updated_game_state if move legal.
 2. updated status.
 
-========================================================================================================
+======================================================
 METHOD 3
 ai_move(game_state) -> (row, col)
-========================================================================================================
+======================================================
 
 Purpose: selects a legal move for the current player based on the game's difficulty.
 
@@ -80,9 +81,9 @@ Output (return value to front-end)
 1. (row, col): The AI's chosen move.
 2. No move available: returns None.
 
-========================================================================================================
+======================================================
 game_state example schema
-========================================================================================================
+======================================================
 game_state = {
   "board": 3×3 grid of [" ", "X", "O"],
   "current_player": "X" or "O",
