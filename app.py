@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QWidget,
     QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QGridLayout
 )
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QPixmap
 import random
 import time
@@ -17,6 +17,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Tic Tac Toe")
         self.showMaximized()
 
+        
         # Central widget
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
@@ -162,10 +163,11 @@ class MainWindow(QMainWindow):
         # Main layout
         board_layout = QVBoxLayout()
         board_layout.setAlignment(Qt.AlignCenter)
+        board_layout.setSpacing(30)
 
         # Container for the grid
         grid_container = QWidget()
-        grid_container.setFixedSize(540, 540)  # 3x3 * 120px
+        grid_container.setFixedSize(720, 720)  # 3x3 * 120px
         grid_layout = QGridLayout(grid_container)
         grid_layout.setSpacing(0)  
         grid_layout.setContentsMargins(0, 0, 0, 0)
@@ -174,31 +176,57 @@ class MainWindow(QMainWindow):
 
         for row in range(3):
             for col in range(3):
-                button = QPushButton("O")
-                button.setFixedSize(180, 180)
-                button.clicked.connect(self.handleClick)
+                button = QPushButton("")
+                button.setFixedSize(240, 240)
+                button.clicked.connect(lambda checked, r=row, c=col: self.handleClick(r, c))
+                
                 button.setObjectName(f"cell_{row}_{col}")  # unique ID for styling
                 grid_layout.addWidget(button, row, col)
                 
                 self.board_buttons.append(button)
 
+        btn_back = QPushButton("⬅ Back to Menu")
+        btn_back.setFixedSize(200, 60)
+        btn_back.setObjectName("backButton")
+        btn_back.clicked.connect(self.backToMenu)  # When clicked, go back to menu
+        
+        
+
         board_layout.addWidget(grid_container, alignment=Qt.AlignCenter)
+        board_layout.addWidget(btn_back, alignment=Qt.AlignCenter)
 
         self.central_widget.setLayout(board_layout)
 
         #  Apply styles for the BOARD
         self.central_widget.setStyleSheet("""
+                                          
         QWidget {
-            background: #f4f4f9;  /* same for window and board background */
+            background: qlineargradient(
+                        x1:0, y1:0, x2:0, y2:1,
+                        stop:0 #24D2F9, stop:1 #187bcd
+                    );
+                    font-family: 'Segoe UI';  /* same for window and board background */
         }
 
         QPushButton {
             background-color: #f4f4f9;  /* same as background */
-            font-size: 120px;
+            font-size: 180px;
             font-weight: bold;
             color: #3F5977;
-            border: 1px solid black;  /* remove all borders first */
+            border: none;  /* remove all borders first */
         }
+                                          
+        QPushButton#backButton {
+            background-color: #AC7C49;
+            color: white;
+            font-size: 20px;
+            padding: 10px;
+            border-radius: 12px;
+        }
+
+        QPushButton#backButton:hover {
+            background-color: #915f32;
+        }  
 
         /* Top row */
         QPushButton#cell_0_0, QPushButton#cell_0_1, QPushButton#cell_0_2 {
@@ -238,31 +266,56 @@ class MainWindow(QMainWindow):
 
         # Sending request to create the board
         # self.game_state = startGame(difficulty, random.choice(list_players))
+
+    def backToMenu(self):
+        self.takeCentralWidget()
+        self.central_widget = QWidget()
+        self.setCentralWidget(self.central_widget)
+        self.menu()
     
-    def handleClick(self):
-        if(self.game_state["current_player"] == "AI"):
+    def handleClick(self, row, col):
+        print(f"Button clicked at {row}, {col}")
+        if self.game_state["current_player"] == "AI":
             return
+        
         self.changeStateAllButtons(False)
 
-        #Sending Request to apply players move
-        # self.game_state = applyMove(self.game_state, button.row, button.col)
-        self.update_board(self.game_state["board"])
-        time.sleep(2)
+        # Example for when backend is ready:
+        # self.game_state = applyMove(self.game_state, row, col)
 
-        # Sending request to ask for AI move
+        self.update_board(self.game_state["board"])
+
+        # Simulate AI move delay
+        QTimer.singleShot(2000, self.aiMove)
+
+    
+
+    def aiMove(self):
+        # backend call
         # self.game_state = AI_move(self.game_state)
         self.update_board(self.game_state["board"])
         self.changeStateAllButtons(True)
 
+
+
     def changeStateAllButtons(self, enabled: bool):
         for button in self.board_buttons:
             button.setEnabled(enabled)
+            
 
 
     def update_board(self, board):
-        #Disable 
+        for i, button in enumerate(self.board_buttons):
+            row, col = divmod(i, 3)
+            value = board[row][col]
+            button.setText(value) 
+
+    # def resetBoard(self):
+    #     for button in self.board_buttons:
+    #         button.setText("")
+    #         button.setEnabled(True)
+    #     self.game_state["board"] = [[""]*3 for _ in range(3)]
         
-        pass
 
 
 
