@@ -34,11 +34,7 @@ Start or reset a game with a fresh empty board, record difficulty, and set who m
 4. Set game status to `"in_progress"`.  
 
 **Output (return value to front-end)**  
-Returns **game_state** with:  
-1. Empty 3×3 board.  
-2. `current_player = first_player`.  
-3. `difficulty = difficulty`.  
-4. `game_status = "in_progress"`.  
+- `(updated_game_state)`.
 
 ---
 
@@ -61,14 +57,14 @@ Place the current player's mark at the requested cell, if legal, update turn, an
    - Switch current player.  
 3. If request is illegal:  
    - Do not modify board or current player.  
-   - Return unchanged **game_state**, with status set to `illegal_move`.  
+   - Set status to `illegal_move`.  
 4. Return the new/unchanged **game_state** and the new status.  
 5. No moves allowed after a win/draw.  
 6. A cell cannot be overwritten.  
 7. Win detection covers all 8 lines.  
 
 **Output (return value to front-end)**  
-- `(updated_game_state, status)`.
+- `(updated_game_state)`.
 
 ---
 
@@ -91,8 +87,7 @@ Select a legal move for the current player based on the game’s difficulty.
 4. Guarantee that the `(row, col)` returned is a legal/empty cell.  
 
 **Output (return value to front-end)**  
-- `(row, col)` for the AI’s chosen move, or `None` if no move is available.  
-  *(The UI then calls `apply_move(game_state, row, col)` to apply it.)*
+- `(updated_game_state)`.
 
 ---
 
