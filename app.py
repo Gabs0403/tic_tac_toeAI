@@ -236,15 +236,20 @@ class MainWindow(QMainWindow):
         
         list_players = ["Player", "AI"]
 
+        # Sending request to create the board
         # self.game_state = startGame(difficulty, random.choice(list_players))
     
     def handleClick(self):
         if(self.game_state["current_player"] == "AI"):
             return
         self.changeStateAllButtons(False)
+
+        #Sending Request to apply players move
         # self.game_state = applyMove(self.game_state, button.row, button.col)
         self.update_board(self.game_state["board"])
         time.sleep(2)
+
+        # Sending request to ask for AI move
         # self.game_state = AI_move(self.game_state)
         self.update_board(self.game_state["board"])
         self.changeStateAllButtons(True)
