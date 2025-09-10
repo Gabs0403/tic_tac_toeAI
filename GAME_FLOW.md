@@ -39,10 +39,9 @@
 - When it’s the AI’s turn, the UI calls **`ai_move(game_state)`**.  
 - The **backend** uses the stored difficulty to decide:
   - **Easy** → pick a random legal move.  
-  - **Impossible** → run the optimal algorithm (minimax).  
-- The backend returns a suggested `(row, col)` move.  
-- The **UI** immediately calls **`apply_move`** with that move.  
+  - **Impossible** → run the optimal algorithm (minimax).    
 - The backend applies the move, updates the board, switches turns, and evaluates status.
+- The backend returns an updated `game_state` with the AI's choice. 
 
 ---
 
