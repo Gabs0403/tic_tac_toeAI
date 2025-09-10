@@ -18,7 +18,7 @@
 ---
 
 ## METHOD 1  
-### `create_board(difficulty, first_player, board) -> (game_state)`
+### `create_board(difficulty, first_player) -> (game_state)`
 
 **Purpose**  
 Start or reset a game with a fresh empty board, record difficulty, and set who moves first.
@@ -26,7 +26,7 @@ Start or reset a game with a fresh empty board, record difficulty, and set who m
 **Parameters (Required from front-end)**  
 1. `difficulty`: `"easy"` or `"impossible"` to call the correct AI algorithm.  
 2. `first_player`: needed to know who starts the game and which symbol the user picks `"X"` or `"O"`.
-3. `board`: initial empty board from front-end.  
+
 
 **Responsibilities (back-end)**  
 1. Create an empty board (3×3 matrix of rows and columns).  
