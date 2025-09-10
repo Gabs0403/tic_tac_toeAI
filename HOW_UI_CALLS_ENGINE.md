@@ -11,9 +11,10 @@
    - `win(O)`  
    - `draw`  
    - `illegal_move`
-4. **game_state**: current board state, whose turn it is (player or AI), chosen difficulty (picks correct algorithm for AI), game_status.  
+4. **game_state**: current board state, whose turn it is (Human or AI), chosen difficulty (picks correct algorithm for AI), game_status.  
 
-The UI will render everything that is in **game_state**.
+- The UI will render everything that is in **game_state**.
+- Player that starts the game is `"X"`.
 
 ---
 
@@ -97,6 +98,7 @@ Select a legal move for the current player based on the game’s difficulty.
 game_state = {
   "board": 3×3 grid of [" ", "X", "O"],
   "current_player": "X" or "O",
+  "player_type": {"X": "human", "O": "ai"},
   "difficulty": "easy" or "impossible",
   "status": "in_progress" | "win(X)" | "win(O)" | "draw"
 }
