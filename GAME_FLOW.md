@@ -2,7 +2,7 @@
 
 ## 1. Starting the Game
 - The **UI** creates an empty 3×3 board (all spaces blank).  
-- The UI calls the backend’s **`create_board(difficulty, first_player, board)`** method.  
+- The UI calls the backend’s **`create_board(difficulty, first_player)`** method.  
 - The **backend** validates that the board is correct:
   - Must be 3×3 shape.  
   - Only legal values allowed (`"X"`, `"O"`, `" "`).  
