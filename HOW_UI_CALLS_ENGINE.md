@@ -25,7 +25,7 @@ Start or reset a game with a fresh empty board, record difficulty, and set who m
 
 **Parameters (Required from front-end)**  
 1. `difficulty`: `"easy"` or `"impossible"` to call the correct AI algorithm.  
-2. `first_player`: needed to know who starts the game and which symbol the user picks `"X"` or `"O"`.
+2. `first_player`: needed to know who starts the game. `"X"` is always first player.
 
 
 **Responsibilities (back-end)**  
