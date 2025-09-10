@@ -5,13 +5,13 @@
 ## Shared Data (applies to all methods)
 1. **Players**: `"X"` and `"O"`.
 2. **Board**: a 3×3 grid with cells that can be empty, `"X"`, or `"O"`.
-3. **game_status**:  
+3. **game_status (part of game_state)**:  
    - `in_progress` (continue game loop)  
    - `win(X)`  
    - `win(O)`  
    - `draw`  
    - `illegal move`
-4. **game_state**: current board state, whose turn it is (player or AI), chosen difficulty (picks correct algorithm for AI).  
+4. **game_state**: current board state, whose turn it is (player or AI), chosen difficulty (picks correct algorithm for AI), game_status.  
 
    The UI will render everything that is in **game_state**.
 
