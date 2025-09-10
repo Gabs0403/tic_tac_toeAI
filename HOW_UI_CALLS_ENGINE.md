@@ -47,7 +47,7 @@ It will return the **game_state** with the following details:
 ### `apply_move(game_state, row, col) -> (updated_game_state, status)`
 
 **Purpose**  
-Place the current player's mark at the requested cell, if legal, update turn, and evaluate the `game_status` (`win/lose/draw/in_progress`). It enforces the rules.
+Place the current player's (Human) mark at the requested cell, if legal, update turn, and evaluate the `game_status` (`win/lose/draw/in_progress`). It enforces the rules.
 
 **Parameters (Required from front-end)**  
 1. `game_state`: the most recent state back-end gave to UI. The front-end must keep the latest **game_state** back-end returned and pass that same object back to back-end on the next call.  
@@ -78,7 +78,7 @@ Place the current player's mark at the requested cell, if legal, update turn, an
 ### `ai_move(game_state) -> (row, col)`
 
 **Purpose**  
-Selects a legal move for the current player based on the game’s difficulty.
+Selects a legal move for the current player (AI) based on the game’s difficulty.
 
 **Parameters (Required from front-end)**  
 1. `game_state`: the **game_state** after the human player’s last move (or at the start if AI goes first).  
