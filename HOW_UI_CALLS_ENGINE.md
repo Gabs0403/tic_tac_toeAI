@@ -75,7 +75,7 @@ Place the current player's mark at the requested cell, if legal, update turn, an
 ---
 
 ## METHOD 3  
-### `ai_move(game_state) -> (row, col)`
+### `ai_move(game_state) -> (updated_game_state)`
 
 **Purpose**  
 Selects a legal move for the current player based on the game’s difficulty.
@@ -94,7 +94,7 @@ Selects a legal move for the current player based on the game’s difficulty.
 4. Guarantee that the `(row, col)` returned is a legal/empty cell.  
 
 **Output (return value to front-end)**  
-1. `(row, col)`: the AI’s chosen move.  
+1. game_state (new board). 
 2. If no move available: returns `None`.  
 
 ---
