@@ -40,7 +40,7 @@ Start or reset a game with a fresh empty board, record difficulty, and set who m
 ---
 
 ## METHOD 2  
-### `apply_move(game_state, row, col) -> (updated_game_state, status)`
+### `apply_move(game_state, row, col) -> (updated_game_state)`
 
 **Purpose**  
 Place the current player's mark at the requested cell, if legal, update turn, and evaluate the `game_status` (`win/lose/draw/in_progress`). It enforces the rules.
