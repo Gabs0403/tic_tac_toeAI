@@ -1,4 +1,3 @@
-
 # Purpose: create and return a NEW empty 3x3 board (each cell is " ").
 # Returns: 3x3 list of lists of str.
 def make_empty_board():
