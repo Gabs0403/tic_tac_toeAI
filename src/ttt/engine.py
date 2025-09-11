@@ -57,7 +57,7 @@ def place_mark(board, row, col, current_player):
 def compute_status(board):
     # Empty spot in the board
     EMPTY = " "
-
+    # a, b, c hold the mark ("X" or "O").
     # ===ROWS===
     for row in range(3):
         a, b, c = board[row][0], board[row][1], board[row][2]
