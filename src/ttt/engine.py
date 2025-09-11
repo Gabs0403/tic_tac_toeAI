@@ -42,6 +42,7 @@ def legal_moves(board):
 # Returns: new 3x3 board with that cell set to "X" or "O".
 def place_mark(board, row, col, current_player):
     new_board = []
+    # for loop copies existing board.
     for row_vals in board:
         new_row = row_vals[:]    
         new_board.append(new_row)
