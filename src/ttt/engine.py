@@ -53,12 +53,50 @@ def place_mark(board, row, col, current_player):
 
 # Purpose: evaluate the board state after a move.
 # Returns: "win(X)" | "win(O)" | "draw" | "in_progress".
-def compute_status(board, current_player):
-    pass
+def compute_status(board):
+    # Empty spot in the board
+    EMPTY = " "
+
+    # ===ROWS===
+    for row in range(3):
+        a, b, c = board[row][0], board[row][1], board[row][2]
+        if a != EMPTY and a == b == c:
+            status = f"win({a})"
+            return status
+
+    # ===COLUMNS===
+    for col in range(3):
+        a, b, c = board[0][col], board[1][col], board[2][col]
+        if a != EMPTY and a == b == c:
+            status = f"win({a})"
+            return status
+        
+    # ===DIAGONAL===
+    a, b, c = board[0][2], board[1][1], board[2][0]
+    if a != EMPTY and a == b == c:
+            status = f"win({a})"
+            return status
     
+    a, b, c = board[0][0], board[1][1], board[2][2]
+    if a != EMPTY and a == b == c:
+            status = f"win({a})"
+            return status
     
+    # ===Check if board full=== 
+    if len(legal_moves(board)) == 0:
+        status = "draw"
+        return status
+    else:
+        status = "in_progress"
+        return status
 
 # Purpose: flip the current player token.
 # Returns: "O" if player == "X", else "X".
 def other_player(current_player):
-    pass
+    if current_player == "X":
+        current_player = "O"
+        return current_player
+    else:
+        current_player = "X"
+        return current_player
+        
