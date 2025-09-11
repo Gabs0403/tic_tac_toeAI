@@ -11,7 +11,7 @@
    - `win(O)`  
    - `draw`  
    - `illegal_move`
-4. **game_state**: current board state, whose turn it is (Human or AI), chosen difficulty (picks correct algorithm for AI), game_status.  
+4. **game_state**: Dictionary with current board state, whose turn it is (Human or AI), chosen difficulty (picks correct algorithm for AI), game_status.  
 
 - The UI will render everything that is in **game_state**.
 - Player that starts the game is `"X"`.
@@ -31,8 +31,8 @@ Start or reset a game with a fresh empty board, record difficulty, and set who m
 
 **Responsibilities (back-end)**  
 1. Create an empty board (3×3 matrix of rows and columns).  
-2. Store the chosen difficulty in the Game State container (dictionary).  
-3. Set the `"current player"` to `first_player`.  
+2. Store the chosen difficulty in the `game_state` dictionary.  
+3. Select who the current player is (who goes first). 
 4. Set game status to `"in_progress"`.  
 
 **Output (return value to front-end)**  
