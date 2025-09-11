@@ -70,7 +70,7 @@ Place the current player's mark at the requested cell, if legal, update turn, an
 ---
 
 ## METHOD 3  
-### `ai_move(game_state) -> (row, col) | None`
+### `ai_move(game_state) -> (updated_game_state) | None`
 
 **Purpose**  
 Select a legal move for the current player based on the game’s difficulty.
