@@ -19,7 +19,7 @@
 ---
 
 ## METHOD 1  
-### `create_board(difficulty, first_player) -> (game_state)`
+### `create_board(difficulty, first_player, player_type) -> (game_state)`
 
 **Purpose**  
 Start or reset a game with a fresh empty board, record difficulty, and set who moves first.
