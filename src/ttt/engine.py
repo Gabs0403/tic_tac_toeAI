@@ -20,8 +20,6 @@ def is_in_bounds(row, col):
 
 # Purpose: check whether the target cell has no mark yet.
 # Returns: True if board[row][col] == " "; otherwise False.
-
-
 def is_empty(board, row, col):
     if board[row][col] == " ":
         return True
@@ -30,8 +28,6 @@ def is_empty(board, row, col):
 
 # Purpose: list all playable coordinates on the current board.
 # Returns: list of (row, col) for every empty cell.
-
-
 def legal_moves(board):
     moves = []
 
@@ -44,8 +40,6 @@ def legal_moves(board):
 
 # Purpose: place player's mark at (row, col) and return a NEW board. current_player is "X" or "O".
 # Returns: new 3x3 board with that cell set to "X" or "O".
-
-
 def place_mark(board, row, col, current_player):
     new_board = copy_board(board)
     new_board[row][col] = current_player
@@ -94,8 +88,6 @@ def compute_status(board):
 
 # Purpose: flip the current player token.
 # Returns: "O" if player == "X", else "X".
-
-
 def other_player(current_player):
     if current_player == "X":
         current_player = "O"
@@ -107,7 +99,6 @@ def other_player(current_player):
 
 # Purpose: creates game_state dictionary.
 # Returns: a new game_state dictionary.
-
 def new_game_state(prev_game_state, row, col):
     game_state = {}
 
@@ -136,8 +127,6 @@ def new_game_state(prev_game_state, row, col):
 
 # Purpose: Copy existing board.
 # Returns: Copy of the current board.
-
-
 def copy_board(board):
     new_board = []
     for row_vals in board:
