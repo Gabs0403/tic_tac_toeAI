@@ -6,11 +6,11 @@
 1. **Players**: `"X"` and `"O"`.
 2. **Board**: a 3×3 grid with cells that can be empty, `"X"`, or `"O"`.
 3. **game_status (part of game_state)**:  
-   - `in_progress` (continue game loop)  
+   - `in progress` (continue game loop)  
    - `win(X)`  
    - `win(O)`  
    - `draw`  
-   - `illegal_move`
+   - `illegal move`
 4. **game_state**: Dictionary with current board state, whose turn it is (Human or AI), chosen difficulty (picks correct algorithm for AI), game_status.  
 
 - The UI will render everything that is in **game_state**.
@@ -33,7 +33,7 @@ Start or reset a game with a fresh empty board, record difficulty, and set who m
 1. Create an empty board (3×3 matrix of rows and columns).  
 2. Store the chosen difficulty in the `game_state` dictionary.  
 3. Select who the current player is (who goes first). 
-4. Set game status to `"in_progress"`.  
+4. Set game status to `"in progress"`.  
 
 **Output (return value to front-end)**  
 - `(updated_game_state)`.
@@ -44,14 +44,14 @@ Start or reset a game with a fresh empty board, record difficulty, and set who m
 ### `human_move(game_state, row, col) -> (updated_game_state)`
 
 **Purpose**  
-Place the current player's mark at the requested cell, if legal, update turn, and evaluate the `game_status` (`win/lose/draw/in_progress`). It enforces the rules.
+Place the current player's mark at the requested cell, if legal, update turn, and evaluate the `game_status` (`win/lose/draw/in progress`). It enforces the rules.
 
 **Parameters (Required from front-end)**  
 1. `game_state`: the most recent state back-end gave to UI. The front-end must keep the latest **game_state** back-end returned and pass that same object back to back-end on the next call.  
 2. `row, col`: the selection of the human player in the form of integers `[0,2]`, indicating the tapped cell.  
 
 **Responsibilities (back-end)**  
-1. Validate the request: ensure the game is `in_progress`, `row/col` within bounds, and the target cell is empty.  
+1. Validate the request: ensure the game is `in progress`, `row/col` within bounds, and the target cell is empty.  
 2. If request is legal:  
    - Set the tapped cell to the current player's mark.  
    - Check for a win (if not win, check for a draw).  
@@ -59,7 +59,7 @@ Place the current player's mark at the requested cell, if legal, update turn, an
    - Switch current player.  
 3. If request is illegal:  
    - Do not modify board or current player.  
-   - Set status to `illegal_move`.  
+   - Set status to `illegal move`.  
 4. Return the new/unchanged **game_state** and the new status.  
 5. No moves allowed after a win/draw.  
 6. A cell cannot be overwritten.  
@@ -81,9 +81,9 @@ Select a legal move for the current player based on the game’s difficulty.
 
 **Responsibilities (back-end)**  
 1. Read the stored difficulty from **game_state**.  
-2. If the status is not `in_progress` (already won/draw):  
+2. If the status is not `in rogress` (already won/draw):  
    - Indicate no move available by returning `None`.  
-3. If `in_progress`:  
+3. If `in progress`:  
    - **Easy**: choose a quick/random legal move.  
    - **Impossible**: choose the optimal move to win.  
 4. Guarantee that the `(row, col)` returned is a legal/empty cell.  
@@ -101,5 +101,5 @@ game_state = {
   "current_player": "X" or "O",
   "player_type": {"X": "human", "O": "ai"},
   "difficulty": "easy" or "impossible",
-  "status": "in_progress" | "win(X)" | "win(O)" | "draw"
+  "status": "in progress" | "win(X)" | "win(O)" | "draw" | "illegal move"
 }
