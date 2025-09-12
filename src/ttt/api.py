@@ -15,3 +15,8 @@ def create_board(difficulty, current_player, player_type):
     }
 
     return game_state
+
+# Purpose: Place the current player's mark at the requested cell.
+# Returns: updated game_state.
+def human_move(game_state, row, col):
+    return engine.new_game_state(game_state, row, col)
