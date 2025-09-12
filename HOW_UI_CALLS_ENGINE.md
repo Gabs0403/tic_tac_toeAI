@@ -99,7 +99,6 @@ Select a legal move for the current player based on the game’s difficulty.
 game_state = {
   "board": 3×3 grid of [" ", "X", "O"],
   "current_player": "X" or "O",
-  "player_type": {"X": "human", "O": "ai"},
   "difficulty": "easy" or "impossible",
   "status": "in progress" | "win(X)" | "win(O)" | "draw" | "illegal move"
 }
