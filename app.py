@@ -7,6 +7,7 @@ from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QPixmap
 import random
 import time
+from src.ttt.api import create_board
 
 
 
@@ -146,7 +147,8 @@ class MainWindow(QMainWindow):
                     ],
             "current_player": "",
             "difficulty": "",
-            "status": ""
+            "status": "",
+            "player_type":""
         }
     
 
@@ -265,7 +267,7 @@ class MainWindow(QMainWindow):
         list_players = ["Player", "AI"]
 
         # Sending request to create the board
-        # self.game_state = startGame(difficulty, random.choice(list_players))
+        self.game_state = create_board(difficulty, "Player", "X")
 
     def backToMenu(self):
         self.takeCentralWidget()
