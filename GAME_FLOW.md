@@ -11,27 +11,27 @@
   - the board,  
   - the chosen difficulty,  
   - which player goes first,  
-  - the game status (`in_progress`).
+  - the game status (`in progress`).
 
 ---
 
 ## 2. Checking Whose Turn It Is
-- If it’s the **human’s turn**, the UI waits for a tap.  
+- If it’s the **human’s turn**, the UI waits for a tap and calls **`human_move(game_state, row, col)`**.  
 - If it’s the **AI’s turn**, the UI immediately calls **`ai_move(game_state)`**.
 
 ---
 
 ## 3. Human Move Flow
 - Player taps a cell on the touchscreen.  
-- The UI calls **`apply_move(game_state, row, col)`**.  
+- The UI calls **`human_move(game_state, row, col)`**.  
 - The **backend**:
   - Checks if the move is legal (inside bounds, empty cell, game not over).  
   - Updates the board with the move.  
   - Switches to the next player.  
   - Evaluates the new status:
-    - `in_progress` → continue the loop.  
+    - `in progress` → continue the loop.  
     - `win(X)`, `win(O)`, or `draw` → stop the game.  
-    - `illegal_move` → ignore and stay on the same turn.
+    - `illegal move` → ignore and stay on the same turn.
 
 ---
 
@@ -39,7 +39,7 @@
 - When it’s the AI’s turn, the UI calls **`ai_move(game_state)`**.  
 - The **backend** uses the stored difficulty to decide:
   - **Easy** → pick a random legal move.  
-  - **Impossible** → run the optimal algorithm (minimax).    
+  - **Impossible** → run the optimal algorithm.    
 - The backend applies the move, updates the board, switches turns, and evaluates status.
 - The backend returns an updated `game_state` with the AI's choice. 
 
@@ -52,11 +52,11 @@
   - Check whose turn.  
   - Handle human or AI move.  
   - Apply move and update state.  
-- The loop ends only when the backend reports a final status: **win, draw, or illegal move**.
+- The loop ends only when the backend reports a final status: **win or draw**.
 
 ---
 
 ## Responsibilities
 - **UI (Frontend):** handles touch input, calls backend functions, maintains game loop and redraws the board.  
-- **Backend:** enforces rules, updates the state, decides AI moves, and declares the result.
+- **Backend:** enforces rules, updates the state, decides AI moves & human moves, and declares the result.
 
