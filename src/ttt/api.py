@@ -9,7 +9,6 @@ def create_board(difficulty, current_player, player_type):
     game_state = {
         "board": board,
         "current_player": current_player,
-        "player_type": player_type,
         "difficulty": difficulty,
         "status": status
     }
