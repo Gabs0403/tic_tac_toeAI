@@ -20,3 +20,11 @@ def create_board(difficulty, current_player, current_type):
 # Returns: updated game_state.
 def human_move(game_state, row, col):
     return engine.new_game_state(game_state, row, col)
+
+# Purpose: Select a legal move for the AI player based on the game’s difficulty.
+# Returns: updated game_state.
+def ai_move(game_state):
+    difficulty = game_state["difficulty"]
+
+    if difficulty == "easy":
+        return engine.ai_easy(game_state)
