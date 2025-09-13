@@ -159,6 +159,8 @@ def new_game_state(prev_game_state, row, col):
 
 # Purpose: Copy existing board.
 # Returns: Copy of the current board.
+
+
 def copy_board(board):
     new_board = []
     for row_vals in board:
