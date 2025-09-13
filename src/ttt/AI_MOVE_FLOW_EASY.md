@@ -31,7 +31,7 @@ This is for a quick demo and can be improved later to make it less "dumb".
    - Pick exactly one move from that list.
 
 3. **Apply the move via the `place_mark(board, row, col, current_type)`**  
-   - Feed `(row, col)` and the *current* `game_state` into `place_mark(board, row, col, current_type)` (the same logic used for human moves).  
+   - Feed `(row, col)` and the *current* `game_state` into `place_mark(board, row, col, current_type)` through `new_game_state(prev_game_state, row, col)` (the same logic used for human moves).  
    - This produces a **new `game_state`** where:
      - The selected cell contains `current_player`’s mark,
      - `status` is recomputed (`"win(X)" | "win(O)" | "draw" | "in progress"`),
@@ -61,7 +61,7 @@ This is for a quick demo and can be improved later to make it less "dumb".
   ↓  
 - **Randomly select** one `(row, col)` from `legal_moves`  
   ↓  
-- **Apply** the move (use the reducer to get a fresh `game_state`)  
+- **Apply** the move 
   - If new `status` is `"in progress"` → flip `current_player` **and** set `current_type = "human"`  
   - Else (win/draw) → keep `current_player` and `current_type` as they were  
   ↓  
