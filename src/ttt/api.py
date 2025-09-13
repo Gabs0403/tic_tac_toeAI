@@ -2,7 +2,7 @@ from . import engine as engine
 
 # Purpose: Start or reset a game with a fresh empty board, record difficulty, and set who moves first.
 # Returns: game_state dictionary.
-def create_board(difficulty, current_player):
+def create_board(difficulty, current_player, current_type):
     board = engine.make_empty_board()
     status = engine.compute_status(board)
 
@@ -10,7 +10,8 @@ def create_board(difficulty, current_player):
         "board": board,
         "current_player": current_player,
         "difficulty": difficulty,
-        "status": status
+        "status": status,
+        "current_type": current_type
     }
 
     return game_state

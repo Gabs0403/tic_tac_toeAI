@@ -7,7 +7,7 @@ from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QPixmap
 import random
 import time
-from src.ttt.api import create_board
+from src.ttt.api import (create_board, human_move)
 
 
 
@@ -25,6 +25,8 @@ class MainWindow(QMainWindow):
         self.menu()
 
     def menu(self):
+        self.in_game = False
+
         # Outer layout (horizontal, centers everything)
         outer_layout = QHBoxLayout()
 
@@ -148,12 +150,13 @@ class MainWindow(QMainWindow):
             "current_player": "",
             "difficulty": "",
             "status": "",
-            "player_type":""
+            "current_type":""
         }
     
 
     
     def initializeBoard(self, difficulty):
+        self.in_game = True
         
         self.game_state["difficulty"] = difficulty
 
@@ -270,6 +273,7 @@ class MainWindow(QMainWindow):
         self.game_state = create_board(difficulty, "Player", "X")
 
     def backToMenu(self):
+        
         self.takeCentralWidget()
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
@@ -282,8 +286,8 @@ class MainWindow(QMainWindow):
         
         self.changeStateAllButtons(False)
 
-        # Example for when backend is ready:
-        # self.game_state = applyMove(self.game_state, row, col)
+       
+        self.game_state = human_move(self.game_state, row, col)
 
         self.update_board(self.game_state["board"])
 
@@ -293,6 +297,8 @@ class MainWindow(QMainWindow):
     
 
     def aiMove(self):
+        if not self.in_game:
+            return
         # backend call
         # self.game_state = AI_move(self.game_state)
         self.update_board(self.game_state["board"])

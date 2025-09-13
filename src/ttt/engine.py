@@ -40,9 +40,9 @@ def legal_moves(board):
 
 # Purpose: place player's mark at (row, col) and return a NEW board. current_player is "X" or "O".
 # Returns: new 3x3 board with that cell set to "X" or "O".
-def place_mark(board, row, col, current_player):
+def place_mark(board, row, col, current_type):
     new_board = copy_board(board)
-    new_board[row][col] = current_player
+    new_board[row][col] = current_type
 
     return new_board
 
@@ -86,16 +86,25 @@ def compute_status(board):
         status = "in progress"
         return status
 
-# Purpose: flip the current player token.
-# Returns: "O" if player == "X", else "X".
+# Purpose: flip the current player.
+# Returns: "Player" if player == "AI", else "AI".
 def other_player(current_player):
-    if current_player == "X":
-        current_player = "O"
+    if current_player == "AI":
+        current_player = "Player"
         return current_player
     else:
-        current_player = "X"
+        current_player = "AI"
         return current_player
 
+# Purpose: flip the current player token.
+# Returns: "O" if player == "X", else "X".
+def other_type(current_type):
+    if current_type == "X":
+        current_type = "O"
+        return current_type
+    else:
+        current_type = "X"
+        return current_type
 
 # Purpose: creates game_state dictionary.
 # Returns: a new game_state dictionary.
@@ -106,24 +115,32 @@ def new_game_state(prev_game_state, row, col):
     current_player = prev_game_state["current_player"]
     difficulty = prev_game_state["difficulty"]
     status = prev_game_state["status"]
+    current_type = prev_game_state["current_type"]
 
     if status == "in progress" or status == "illegal move":
-        if is_in_bounds(row, col) and is_empty(board, row, col):
-            game_state["board"] = place_mark(board, row, col, current_player)
+        if is_in_bounds(row, col) and is_empty(board, row, col): 
+            game_state["board"] = place_mark(board, row, col, current_type)
             game_state["difficulty"] = difficulty
             game_state["status"] = compute_status(game_state["board"])
             if game_state["status"] == "in progress":
                 game_state["current_player"] = other_player(current_player)
+                # game_state["current_player"] = current_player     #That's for testing purposes (Gabriel)
+                game_state["current_type"] = other_type(current_type)
             else:
                 game_state["current_player"] = current_player
+                game_state["current_type"] = current_type
+            return game_state
         else:
 
             game_state["board"] = copy_board(board)
             game_state["current_player"] = current_player
+            game_state["current_type"] = current_type
             game_state["difficulty"] = difficulty
             game_state["status"] = "illegal move"
+            return game_state
+    return prev_game_state
 
-    return game_state
+    
 
 # Purpose: Copy existing board.
 # Returns: Copy of the current board.
