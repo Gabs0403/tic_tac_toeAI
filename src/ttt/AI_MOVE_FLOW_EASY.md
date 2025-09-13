@@ -28,7 +28,7 @@ This is for a quick demo and can be improved later to make it less "dumb".
    - Read the board and build the list of empty `(row, col)` positions.
 
 2. **Choose uniformly at random**  
-   - Pick exactly one move from that list with equal probability.
+   - Pick exactly one move from that list.
 
 3. **Apply the move via the `place_mark(board, row, col, current_type)`**  
    - Feed `(row, col)` and the *current* `game_state` into `place_mark(board, row, col, current_type)` (the same logic used for human moves).  
