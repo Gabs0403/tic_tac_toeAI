@@ -1,5 +1,9 @@
+import random
+
 # Purpose: create and return a NEW empty 3x3 board (each cell is " ").
 # Returns: 3x3 list of lists of str.
+
+
 def make_empty_board():
     board = [
         [" ", " ", " "],
@@ -20,6 +24,8 @@ def is_in_bounds(row, col):
 
 # Purpose: check whether the target cell has no mark yet.
 # Returns: True if board[row][col] == " "; otherwise False.
+
+
 def is_empty(board, row, col):
     if board[row][col] == " ":
         return True
@@ -28,6 +34,8 @@ def is_empty(board, row, col):
 
 # Purpose: list all playable coordinates on the current board.
 # Returns: list of (row, col) for every empty cell.
+
+
 def legal_moves(board):
     moves = []
 
@@ -40,6 +48,8 @@ def legal_moves(board):
 
 # Purpose: place player's mark at (row, col) and return a NEW board. current_player is "X" or "O".
 # Returns: new 3x3 board with that cell set to "X" or "O".
+
+
 def place_mark(board, row, col, current_type):
     new_board = copy_board(board)
     new_board[row][col] = current_type
@@ -88,6 +98,8 @@ def compute_status(board):
 
 # Purpose: flip the current player.
 # Returns: "Player" if player == "AI", else "AI".
+
+
 def other_player(current_player):
     if current_player == "AI":
         current_player = "Player"
@@ -98,6 +110,8 @@ def other_player(current_player):
 
 # Purpose: flip the current player token.
 # Returns: "O" if player == "X", else "X".
+
+
 def other_type(current_type):
     if current_type == "X":
         current_type = "O"
@@ -108,6 +122,8 @@ def other_type(current_type):
 
 # Purpose: creates game_state dictionary.
 # Returns: a new game_state dictionary.
+
+
 def new_game_state(prev_game_state, row, col):
     game_state = {}
 
@@ -118,8 +134,8 @@ def new_game_state(prev_game_state, row, col):
     current_type = prev_game_state["current_type"]
 
     if status == "in progress" or status == "illegal move":
-        if is_in_bounds(row, col) and is_empty(board, row, col): 
-            game_state["board"] = place_mark(board, row, col, current_type)
+        if is_in_bounds(row, col) and is_empty(board, row, col):
+            game_state["board"] = place_mark(board, row, col, current_player)
             game_state["difficulty"] = difficulty
             game_state["status"] = compute_status(game_state["board"])
             if game_state["status"] == "in progress":
@@ -140,7 +156,6 @@ def new_game_state(prev_game_state, row, col):
             return game_state
     return prev_game_state
 
-    
 
 # Purpose: Copy existing board.
 # Returns: Copy of the current board.
@@ -151,3 +166,26 @@ def copy_board(board):
         new_board.append(new_row)
 
     return new_board
+
+# Purpose: Chooses a random cell for the AI to play.
+# Returns: updated game_state.
+
+
+def ai_easy(current_game_state):
+    status = current_game_state["status"]
+    current_type = current_game_state["current_type"]
+
+    if status != "in progress":
+        return current_game_state
+
+    if current_type != "AI":
+        return current_game_state
+
+    board = current_game_state["board"]
+    available_moves = legal_moves(board)
+
+    if not available_moves:
+        return current_game_state
+
+    row, col = random.choice(available_moves)
+    return new_game_state(current_game_state, row, col)
