@@ -2,6 +2,8 @@ from . import engine as engine
 
 # Purpose: Start or reset a game with a fresh empty board, record difficulty, and set who moves first.
 # Returns: game_state dictionary.
+
+
 def create_board(difficulty, current_player, current_type):
     board = engine.make_empty_board()
     status = engine.compute_status(board)
@@ -18,11 +20,15 @@ def create_board(difficulty, current_player, current_type):
 
 # Purpose: Place the current player's mark at the requested cell.
 # Returns: updated game_state.
+
+
 def human_move(game_state, row, col):
     return engine.new_game_state(game_state, row, col)
 
-# Purpose: Select a legal move for the AI player based on the game’s difficulty.
+# Purpose: Select a legal move for the AI based on the game’s difficulty.
 # Returns: updated game_state.
+
+
 def ai_move(game_state):
     difficulty = game_state["difficulty"]
 
