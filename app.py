@@ -7,7 +7,7 @@ from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QPixmap
 import random
 import time
-from src.ttt.api import (create_board, human_move)
+from src.ttt.api import (create_board, human_move, ai_move)
 
 
 
@@ -270,7 +270,14 @@ class MainWindow(QMainWindow):
         list_players = ["Player", "AI"]
 
         # Sending request to create the board
-        self.game_state = create_board(difficulty, "Player", "X")
+        # self.game_state = create_board(difficulty, "AI", "X") # Testing purposes
+
+        if random.choice(list_players) == "AI":
+            self.game_state = create_board(difficulty, "AI", "X")
+            QTimer.singleShot(3000, self.aiMove)
+            
+        else:
+            self.game_state = create_board(difficulty, "Player", "X")
 
     def backToMenu(self):
         
@@ -300,7 +307,7 @@ class MainWindow(QMainWindow):
         if not self.in_game:
             return
         # backend call
-        # self.game_state = AI_move(self.game_state)
+        self.game_state = ai_move(self.game_state)
         self.update_board(self.game_state["board"])
         self.changeStateAllButtons(True)
 

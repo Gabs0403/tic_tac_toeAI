@@ -26,5 +26,5 @@ def human_move(game_state, row, col):
 def ai_move(game_state):
     difficulty = game_state["difficulty"]
 
-    if difficulty == "easy":
+    if difficulty == "Easy":
         return engine.ai_easy(game_state)

@@ -135,7 +135,7 @@ def new_game_state(prev_game_state, row, col):
 
     if status == "in progress" or status == "illegal move":
         if is_in_bounds(row, col) and is_empty(board, row, col):
-            game_state["board"] = place_mark(board, row, col, current_player)
+            game_state["board"] = place_mark(board, row, col, current_type)
             game_state["difficulty"] = difficulty
             game_state["status"] = compute_status(game_state["board"])
             if game_state["status"] == "in progress":
@@ -175,12 +175,15 @@ def copy_board(board):
 
 def ai_easy(current_game_state):
     status = current_game_state["status"]
-    current_type = current_game_state["current_type"]
-
+    current_player = current_game_state["current_player"]
+    
+    if status == "":
+        status = "in progress"
+        
     if status != "in progress":
         return current_game_state
 
-    if current_type != "AI":
+    if current_player != "AI":
         return current_game_state
 
     board = current_game_state["board"]
