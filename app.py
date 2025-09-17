@@ -70,13 +70,13 @@ class MainWindow(QMainWindow):
         # images
         
         robot_img = QLabel()
-        robot_pixmap = QPixmap("robot.png")  # 👈 replace with your robot image path
+        robot_pixmap = QPixmap("robot.png")  
         robot_pixmap = robot_pixmap.scaled(200, 200, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         robot_img.setPixmap(robot_pixmap)
         robot_img.setAlignment(Qt.AlignCenter)
 
         board_img = QLabel()
-        board_pixmap = QPixmap("tic tac toe.png")  # 👈 replace with your tic tac toe board image path
+        board_pixmap = QPixmap("tic tac toe.png") 
         board_pixmap = board_pixmap.scaled(300, 300, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         board_img.setPixmap(board_pixmap)
         board_img.setAlignment(Qt.AlignCenter)
@@ -295,11 +295,23 @@ class MainWindow(QMainWindow):
 
        
         self.game_state = human_move(self.game_state, row, col)
+        self.in_game = self.game_state["status"] == "in progress"
 
         self.update_board(self.game_state["board"])
 
-        # Simulate AI move delay
-        QTimer.singleShot(2000, self.aiMove)
+        if self.game_state["status"] != "in progress":
+            if self.game_state["status"] == "draw":
+                QTimer.singleShot(1000, lambda: self.renderEndGame("draw"))
+            elif self.game_state["current_player"] == "AI":
+                QTimer.singleShot(1000, lambda: self.renderEndGame("AI"))
+            else:
+                QTimer.singleShot(1000, lambda: self.renderEndGame("Player"))
+            
+
+
+        else:
+            # Simulate AI move delay
+            QTimer.singleShot(2000, self.aiMove)
 
     
 
@@ -308,7 +320,19 @@ class MainWindow(QMainWindow):
             return
         # backend call
         self.game_state = ai_move(self.game_state)
+
         self.update_board(self.game_state["board"])
+
+        
+        if self.game_state["status"] != "in progress":
+            if self.game_state["status"] == "draw":
+                QTimer.singleShot(1000, lambda: self.renderEndGame("draw"))
+            elif self.game_state["current_player"] == "AI":
+                QTimer.singleShot(1000, lambda: self.renderEndGame("AI"))
+            else:
+                QTimer.singleShot(1000, lambda: self.renderEndGame("Player"))
+
+        
         self.changeStateAllButtons(True)
 
 
@@ -324,6 +348,94 @@ class MainWindow(QMainWindow):
             row, col = divmod(i, 3)
             value = board[row][col]
             button.setText(value) 
+
+
+    def renderEndGame(self, result):
+        # Clear central widget
+        self.takeCentralWidget()
+        self.central_widget = QWidget()
+        self.setCentralWidget(self.central_widget)
+
+        # Outer layout (horizontal, centers everything)
+        outer_layout = QHBoxLayout()
+        outer_layout.setAlignment(Qt.AlignCenter)
+
+        # Inner layout (vertical, actual content)
+        vertical_layout = QVBoxLayout()
+        vertical_layout.setSpacing(20)
+
+        # Feedback label
+        label_feedback = QLabel()
+        label_feedback.setAlignment(Qt.AlignCenter)
+
+        # Set feedback text based on result
+        if result == "draw":
+            label_feedback.setText("It's a draw!")
+            robot_image_path = "draw.png"  
+        elif result == "Player":
+            label_feedback.setText("You win!")
+            robot_image_path = "player_win.png"  
+        else:  # AI wins
+            label_feedback.setText("AI wins!")
+            robot_image_path = "ai_win.png" 
+
+        # Robot image
+        robot_img = QLabel()
+        robot_pixmap = QPixmap(robot_image_path)
+        robot_pixmap = robot_pixmap.scaled(500, 500, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        robot_img.setPixmap(robot_pixmap)
+        robot_img.setAlignment(Qt.AlignCenter)
+
+        # Add label and image to vertical layout
+        vertical_layout.addStretch(1)
+        vertical_layout.addWidget(label_feedback)
+        
+        images_layout = QHBoxLayout()
+        images_layout.addWidget(robot_img, alignment=Qt.AlignCenter)
+        images_layout.setSpacing(30)
+        vertical_layout.addLayout(images_layout)
+
+        btn_back = QPushButton("⬅ Back to Menu")
+        btn_back.setFixedSize(200, 60)
+        btn_back.setObjectName("backButton")
+        btn_back.clicked.connect(self.backToMenu)  # When clicked, go back to menu
+        vertical_layout.addWidget(btn_back, alignment=Qt.AlignCenter)
+
+        vertical_layout.addStretch(2)
+
+        # Add vertical layout to outer layout
+        outer_layout.addLayout(vertical_layout)
+
+        # Assign layout to central widget
+        self.central_widget.setLayout(outer_layout)
+
+        # Apply styles
+        self.setStyleSheet("""
+            QMainWindow {
+                background: qlineargradient(
+                    x1:0, y1:0, x2:0, y2:1,
+                    stop:0 #24D2F9, stop:1 #187bcd
+                );
+                font-family: 'Segoe UI';
+            }
+
+            QLabel {
+                font-size: 48px;
+                font-weight: bold;
+                color: #ffffff;
+                text-align: center;
+            }
+                           
+            QPushButton#backButton {
+                background-color: #AC7C49;
+                color: white;
+                font-size: 20px;
+                padding: 10px;
+                border-radius: 12px;
+            }
+        """)
+
+
 
     # def resetBoard(self):
     #     for button in self.board_buttons:
