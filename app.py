@@ -16,7 +16,7 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("Tic Tac Toe")
-        self.showMaximized()
+        self.showFullScreen()
 
         
         # Central widget
@@ -59,6 +59,13 @@ class MainWindow(QMainWindow):
         buttons_layout.addWidget(btn_easy)
         buttons_layout.addWidget(btn_impossible)
 
+        btn_exit = QPushButton("Exit")
+        btn_exit.setFixedSize(100,30)
+        btn_exit.clicked.connect(QApplication.quit)
+
+        btn_exit.setObjectName("btn_exit")
+
+
 
         # Add widgets to vertical layout (all centered)
         
@@ -66,6 +73,7 @@ class MainWindow(QMainWindow):
         vertical_layout.addWidget(label_question, alignment=Qt.AlignCenter)
         vertical_layout.addWidget(label_difficulty, alignment=Qt.AlignCenter)
         vertical_layout.addLayout(buttons_layout)
+        
 
         # images
         
@@ -88,8 +96,11 @@ class MainWindow(QMainWindow):
         images_layout.setSpacing(30)
 
         vertical_layout.addLayout(images_layout)
+        vertical_layout.addWidget(btn_exit, alignment=Qt.AlignCenter)
 
         vertical_layout.addStretch(2) 
+
+        
 
         # Center the vertical layout in outer layout
         outer_layout.addLayout(vertical_layout)
@@ -138,6 +149,23 @@ class MainWindow(QMainWindow):
 
                 QPushButton#btn_easy:pressed, QPushButton#btn_impossible:pressed {
                     background-color: #E6AC00;
+                }
+                
+                QPushButton#btn_exit{
+                    background-color: #E63946;   /* Red */
+                    color: white;
+                    font-size: 14px;
+                    font-weight: bold;
+                    border-radius: 6px;
+                }
+                }
+
+                QPushButton#btn_exit:hover{
+                    background-color: #C72534;
+                }
+
+                QPushButton#btn_exit:pressed {
+                    background-color: #A61C24;
                 }
             """)
         
