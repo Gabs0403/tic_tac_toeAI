@@ -34,3 +34,4 @@ def ai_move(game_state):
 
     if difficulty == "Easy":
         return engine.ai_easy(game_state)
+    return engine.ai_impossible(game_state)

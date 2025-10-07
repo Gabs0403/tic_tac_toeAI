@@ -176,10 +176,10 @@ def copy_board(board):
 def ai_easy(current_game_state):
     status = current_game_state["status"]
     current_player = current_game_state["current_player"]
-    
+
     if status == "":
         status = "in progress"
-        
+
     if status != "in progress":
         return current_game_state
 
@@ -194,3 +194,99 @@ def ai_easy(current_game_state):
 
     row, col = random.choice(available_moves)
     return new_game_state(current_game_state, row, col)
+
+
+def ai_impossible(current_game_state):
+
+    status = current_game_state.get("status", "in progress")
+    if status != "in progress":
+        return current_game_state
+    if current_game_state.get("current_player") != "AI":
+        return current_game_state
+
+    board = current_game_state["board"]
+    ai_mark = current_game_state["current_type"]          # "X" or "O"
+    opponent_mark = other_type(ai_mark)                   # flip mark
+    candidate_moves = legal_moves(board)
+    if not candidate_moves:
+        return current_game_state
+
+    def is_win_after(move_row, move_col, mark):
+        board_after = place_mark(board, move_row, move_col, mark)
+        return compute_status(board_after) == f"win({mark})"
+
+    def count_immediate_wins(a_board, mark):
+        count = 0
+        for lm_row, lm_col in legal_moves(a_board):
+            if compute_status(place_mark(a_board, lm_row, lm_col, mark)) == f"win({mark})":
+                count += 1
+        return count
+
+    def is_fork(move_row, move_col, mark):
+        board_after = place_mark(board, move_row, move_col, mark)
+        return count_immediate_wins(board_after, mark) >= 2
+
+    def opponent_can_fork_after_my(move_row, move_col):
+        """If I play (move_row, move_col), can the opponent create a fork next turn?"""
+        board_after = place_mark(board, move_row, move_col, ai_mark)
+        for opp_row, opp_col in legal_moves(board_after):
+            if is_fork(opp_row, opp_col, opponent_mark):
+                return True
+        return False
+
+    # Predefined coordinates
+    corners = [(0, 0), (0, 2), (2, 0), (2, 2)]
+    sides = [(0, 1), (1, 0), (1, 2), (2, 1)]
+    center = (1, 1)
+
+    # ---------- 1) Win if possible ----------
+    for row, column in candidate_moves:
+        if is_win_after(row, column, ai_mark):
+            return new_game_state(current_game_state, row, column)
+
+    # ---------- 2) Block opponent's immediate win ----------
+    for row, column in candidate_moves:
+        if is_win_after(row, column, opponent_mark):
+            return new_game_state(current_game_state, row, column)
+
+    # ---------- 3) Create a fork if possible ----------
+    for row, column in candidate_moves:
+        if is_fork(row, column, ai_mark):
+            return new_game_state(current_game_state, row, column)
+
+    # ---------- 4) Block opponent fork(s) ----------
+
+    opponent_forks = [(row, column) for (row, column)
+                      in candidate_moves if is_fork(row, column, opponent_mark)]
+    if len(opponent_forks) == 1:
+        row, column = opponent_forks[0]
+        return new_game_state(current_game_state, row, column)
+
+    for row, column in candidate_moves:
+        if not opponent_can_fork_after_my(row, column):
+            return new_game_state(current_game_state, row, column)
+
+    # ---------- 5) Take center ----------
+    if is_empty(board, *center):
+        row, column = center
+        return new_game_state(current_game_state, row, column)
+
+    # ---------- 6) Take opposite corner (if opponent occupies a corner) ----------
+    for row, column in corners:
+        if board[row][column] == opponent_mark:
+            opp_row, opp_col = (2 - row, 2 - column)
+            if is_empty(board, opp_row, opp_col):
+                return new_game_state(current_game_state, opp_row, opp_col)
+
+    # ---------- 7) Any empty corner ----------
+    for row, column in corners:
+        if is_empty(board, row, column):
+            return new_game_state(current_game_state, row, column)
+
+    # ---------- 8) Any empty side ----------
+    for row, column in sides:
+        if is_empty(board, row, column):
+            return new_game_state(current_game_state, row, column)
+
+    # Fallback
+    return current_game_state
