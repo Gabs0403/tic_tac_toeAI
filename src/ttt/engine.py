@@ -1,14 +1,14 @@
 import random
 
-# Purpose: create and return a NEW empty 3x3 board (each cell is " ").
+# Purpose: create and return a NEW empty 3x3 board (each cell is "").
 # Returns: 3x3 list of lists of str.
 
 
 def make_empty_board():
     board = [
-        [" ", " ", " "],
-        [" ", " ", " "],
-        [" ", " ", " "]
+        ["", "", ""],
+        ["", "", ""],
+        ["", "", ""]
     ]
 
     return board
@@ -23,11 +23,11 @@ def is_in_bounds(row, col):
     return False
 
 # Purpose: check whether the target cell has no mark yet.
-# Returns: True if board[row][col] == " "; otherwise False.
+# Returns: True if board[row][col] == ""; otherwise False.
 
 
 def is_empty(board, row, col):
-    if board[row][col] == " ":
+    if board[row][col] == "":
         return True
 
     return False
@@ -41,7 +41,7 @@ def legal_moves(board):
 
     for row in range(3):
         for col in range(3):
-            if board[row][col] == " ":
+            if board[row][col] == "":
                 moves.append((row, col))
 
     return moves
@@ -61,7 +61,7 @@ def place_mark(board, row, col, current_type):
 # Returns: "win(X)" | "win(O)" | "draw" | "in progress".
 def compute_status(board):
     # Empty spot in the board
-    EMPTY = " "
+    EMPTY = ""
 
     # ===ROWS===
     for row in range(3):
@@ -196,97 +196,78 @@ def ai_easy(current_game_state):
     return new_game_state(current_game_state, row, col)
 
 
-def ai_impossible(current_game_state):
 
-    status = current_game_state.get("status", "in progress")
-    if status != "in progress":
+
+def ai_impossible(current_game_state):
+    if current_game_state.get("status", "in progress") != "in progress":
         return current_game_state
     if current_game_state.get("current_player") != "AI":
         return current_game_state
 
     board = current_game_state["board"]
-    ai_mark = current_game_state["current_type"]          # "X" or "O"
-    opponent_mark = other_type(ai_mark)                   # flip mark
+    ai_mark = current_game_state["current_type"]
+    opponent_mark = other_type(ai_mark)
     candidate_moves = legal_moves(board)
-    if not candidate_moves:
-        return current_game_state
 
-    def is_win_after(move_row, move_col, mark):
-        board_after = place_mark(board, move_row, move_col, mark)
-        return compute_status(board_after) == f"win({mark})"
+    # --- Random first move if AI goes first ---
+    if all(cell == "" for row in board for cell in row):
+        first_moves = [(0, 0), (0, 2), (2, 0), (2, 2), (1, 1)]
+        row, col = random.choice(first_moves)
+        return new_game_state(current_game_state, row, col)
 
-    def count_immediate_wins(a_board, mark):
-        count = 0
-        for lm_row, lm_col in legal_moves(a_board):
-            if compute_status(place_mark(a_board, lm_row, lm_col, mark)) == f"win({mark})":
-                count += 1
-        return count
+    # --- Prefer center if player started on edge ---
+    player_edges = [(0,1), (1,0), (1,2), (2,1)]
+    player_first_move = None
+    for r in range(3):
+        for c in range(3):
+            if board[r][c] == opponent_mark:
+                player_first_move = (r,c)
+                break
 
-    def is_fork(move_row, move_col, mark):
-        board_after = place_mark(board, move_row, move_col, mark)
-        return count_immediate_wins(board_after, mark) >= 2
+    if player_first_move in player_edges and is_empty(board, 1,1):
+        return new_game_state(current_game_state, 1,1)
 
-    def opponent_can_fork_after_my(move_row, move_col):
-        """If I play (move_row, move_col), can the opponent create a fork next turn?"""
-        board_after = place_mark(board, move_row, move_col, ai_mark)
-        for opp_row, opp_col in legal_moves(board_after):
-            if is_fork(opp_row, opp_col, opponent_mark):
-                return True
-        return False
+    # --- Minimax implementation ---
+    def minimax(board, player):
+        status = compute_status(board)
+        if status == f"win({ai_mark})":
+            return 1, None
+        elif status == f"win({opponent_mark})":
+            return -1, None
+        elif status == "draw":
+            return 0, None
 
-    # Predefined coordinates
-    corners = [(0, 0), (0, 2), (2, 0), (2, 2)]
-    sides = [(0, 1), (1, 0), (1, 2), (2, 1)]
-    center = (1, 1)
+        moves = legal_moves(board)
+        best_move = None
 
-    # ---------- 1) Win if possible ----------
-    for row, column in candidate_moves:
-        if is_win_after(row, column, ai_mark):
-            return new_game_state(current_game_state, row, column)
+        if player == ai_mark:
+            max_eval = -float("inf")
+            for row, column in moves:
+                new_board = place_mark(board, row, column, ai_mark)
+                eval_score, _ = minimax(new_board, opponent_mark)
+                if eval_score > max_eval:
+                    max_eval = eval_score
+                    best_move = (row, column)
+            return max_eval, best_move
+        else:
+            min_eval = float("inf")
+            for row, column in moves:
+                new_board = place_mark(board, row, column, opponent_mark)
+                eval_score, _ = minimax(new_board, ai_mark)
+                if eval_score < min_eval:
+                    min_eval = eval_score
+                    best_move = (row, column)
+            return min_eval, best_move
 
-    # ---------- 2) Block opponent's immediate win ----------
-    for row, column in candidate_moves:
-        if is_win_after(row, column, opponent_mark):
-            return new_game_state(current_game_state, row, column)
+    # --- Run minimax to get best move ---
+    _, move = minimax(board, ai_mark)
+    if move:
+        row, col = move
+        return new_game_state(current_game_state, row, col)
 
-    # ---------- 3) Create a fork if possible ----------
-    for row, column in candidate_moves:
-        if is_fork(row, column, ai_mark):
-            return new_game_state(current_game_state, row, column)
+    # Fallback: random
+    if candidate_moves:
+        row, col = random.choice(candidate_moves)
+        return new_game_state(current_game_state, row, col)
 
-    # ---------- 4) Block opponent fork(s) ----------
-
-    opponent_forks = [(row, column) for (row, column)
-                      in candidate_moves if is_fork(row, column, opponent_mark)]
-    if len(opponent_forks) == 1:
-        row, column = opponent_forks[0]
-        return new_game_state(current_game_state, row, column)
-
-    for row, column in candidate_moves:
-        if not opponent_can_fork_after_my(row, column):
-            return new_game_state(current_game_state, row, column)
-
-    # ---------- 5) Take center ----------
-    if is_empty(board, *center):
-        row, column = center
-        return new_game_state(current_game_state, row, column)
-
-    # ---------- 6) Take opposite corner (if opponent occupies a corner) ----------
-    for row, column in corners:
-        if board[row][column] == opponent_mark:
-            opp_row, opp_col = (2 - row, 2 - column)
-            if is_empty(board, opp_row, opp_col):
-                return new_game_state(current_game_state, opp_row, opp_col)
-
-    # ---------- 7) Any empty corner ----------
-    for row, column in corners:
-        if is_empty(board, row, column):
-            return new_game_state(current_game_state, row, column)
-
-    # ---------- 8) Any empty side ----------
-    for row, column in sides:
-        if is_empty(board, row, column):
-            return new_game_state(current_game_state, row, column)
-
-    # Fallback
     return current_game_state

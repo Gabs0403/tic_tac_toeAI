@@ -1,4 +1,5 @@
 import sys
+import os
 from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QWidget,
     QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QGridLayout
@@ -78,13 +79,13 @@ class MainWindow(QMainWindow):
         # images
         
         robot_img = QLabel()
-        robot_pixmap = QPixmap("robot.png")  
+        robot_pixmap = QPixmap(resource_path("robot.png"))  
         robot_pixmap = robot_pixmap.scaled(200, 200, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         robot_img.setPixmap(robot_pixmap)
         robot_img.setAlignment(Qt.AlignCenter)
 
         board_img = QLabel()
-        board_pixmap = QPixmap("tic tac toe.png") 
+        board_pixmap = QPixmap(resource_path("tic tac toe.png")) 
         board_pixmap = board_pixmap.scaled(300, 300, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         board_img.setPixmap(board_pixmap)
         board_img.setAlignment(Qt.AlignCenter)
@@ -366,8 +367,14 @@ class MainWindow(QMainWindow):
 
 
     def changeStateAllButtons(self, enabled: bool):
-        for button in self.board_buttons:
-            button.setEnabled(enabled)
+        for i, button in enumerate(self.board_buttons):
+            row, col = divmod(i, 3)
+            # Disable button if cell is already occupied
+            if self.game_state["board"][row][col] != "":
+                button.setEnabled(False)
+            else:
+                button.setEnabled(enabled)
+
             
 
 
@@ -399,13 +406,13 @@ class MainWindow(QMainWindow):
         # Set feedback text based on result
         if result == "draw":
             label_feedback.setText("It's a draw!")
-            robot_image_path = "draw.png"  
+            robot_image_path = resource_path("draw.png")  
         elif result == "Player":
             label_feedback.setText("You win!")
-            robot_image_path = "player_win.png"  
+            robot_image_path = resource_path("player_win.png")  
         else:  # AI wins
             label_feedback.setText("AI wins!")
-            robot_image_path = "ai_win.png" 
+            robot_image_path = resource_path("ai_win.png") 
 
         # Robot image
         robot_img = QLabel()
@@ -474,6 +481,12 @@ class MainWindow(QMainWindow):
 
 
 
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except AttributeError:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
 
 
